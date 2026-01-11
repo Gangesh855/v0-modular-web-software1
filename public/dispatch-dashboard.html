@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dispatch - Enterprise Management System</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <style>
+      :root {
+        --primary: #1a1a1a;
+        --secondary: #2d2d2d;
+        --tertiary: #3a3a3a;
+        --accent: #0099ff;
+        --accent-dark: #0077cc;
+        --text: #f0f0f0;
+        --text-muted: #999;
+        --border: #444;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--primary);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+
+      .navbar {
+        background-color: var(--secondary);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+      }
+
+      .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      .navbar-nav .nav-link {
+        color: var(--text);
+        margin: 0 0.5rem;
+        transition: color 0.3s;
+      }
+
+      .navbar-nav .nav-link:hover {
+        color: var(--accent);
+      }
+
+      .navbar-nav .nav-link.active {
+        color: var(--accent);
+        border-bottom: 2px solid var(--accent);
+      }
+
+      .container-fluid {
+        padding: 2rem;
+      }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .btn-primary {
+        background-color: var(--accent);
+        border: none;
+        padding: 0.6rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--accent-dark);
+        transform: translateY(-2px);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .stat-icon {
+        font-size: 2rem;
+        color: var(--accent);
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 153, 255, 0.1);
+        border-radius: 8px;
+      }
+
+      .stat-content h3 {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin: 0;
+        font-weight: 500;
+      }
+
+      .stat-content p {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0.25rem 0 0;
+        color: var(--text);
+      }
+
+      .filters {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .filter-group {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      .filter-group label {
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .filter-group select {
+        background-color: var(--tertiary);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .table-container {
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+      }
+
+      .table {
+        margin: 0;
+        color: var(--text);
+      }
+
+      .table thead {
+        background-color: var(--tertiary);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .table thead th {
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 1rem;
+        border: none;
+      }
+
+      .table tbody td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+      }
+
+      .table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .table tbody tr:hover {
+        background-color: var(--tertiary);
+        cursor: pointer;
+      }
+
+      .badge {
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .badge-pending {
+        background-color: rgba(255, 193, 7, 0.2);
+        color: #ffd43b;
+      }
+
+      .badge-in_transit {
+        background-color: rgba(0, 153, 255, 0.2);
+        color: #74c0fc;
+      }
+
+      .badge-delivered {
+        background-color: rgba(40, 167, 69, 0.2);
+        color: #51cf66;
+      }
+
+      .badge-cancelled {
+        background-color: rgba(220, 53, 69, 0.2);
+        color: #ff6b6b;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .modal-header h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 1.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      .form-control,
+      .form-select {
+        background-color: var(--tertiary);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        width: 100%;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        background-color: var(--tertiary);
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 153, 255, 0.1);
+      }
+
+      .alert {
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+      }
+
+      .alert-danger {
+        background-color: rgba(220, 53, 69, 0.1);
+        border: 1px solid #dc3545;
+        color: #ff6b6b;
+      }
+
+      .tracking-timeline {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .timeline-item {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .timeline-marker {
+        width: 40px;
+        height: 40px;
+        background-color: var(--tertiary);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: var(--accent);
+      }
+
+      .timeline-content h5 {
+        margin: 0 0 0.25rem;
+        font-weight: 600;
+      }
+
+      .timeline-content p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container-fluid">
+        <span class="navbar-brand">
+          <i class="bi bi-truck"></i> Enterprise
+        </span>
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link active" href="/dispatch-dashboard.html">Dispatch</a>
+          <a class="nav-link" href="/production-dashboard.html">Production</a>
+          <a class="nav-link" href="/foundry-dashboard.html">Foundry</a>
+          <a class="nav-link" href="#" onclick="logout()">Logout</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid">
+      <div class="page-header">
+        <h1>Shipment & Dispatch</h1>
+        <button class="btn-primary" onclick="openCreateShipmentModal()">
+          <i class="bi bi-plus-lg"></i> New Shipment
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-box-seam"></i></div>
+          <div class="stat-content">
+            <h3>Total Shipments</h3>
+            <p id="totalShipments">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
+          <div class="stat-content">
+            <h3>Pending</h3>
+            <p id="pending">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-truck"></i></div>
+          <div class="stat-content">
+            <h3>In Transit</h3>
+            <p id="inTransit">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-check-circle"></i></div>
+          <div class="stat-content">
+            <h3>On-Time Delivery</h3>
+            <p id="onTime">0%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <div class="filter-group">
+          <label>Status:</label>
+          <select id="statusFilter" onchange="loadShipments()">
+            <option value="">All</option>
+            <option value="PENDING">Pending</option>
+            <option value="IN_TRANSIT">In Transit</option>
+            <option value="DELIVERED">Delivered</option>
+            <option value="CANCELLED">Cancelled</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Shipments Table -->
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Shipment Number</th>
+              <th>Carrier</th>
+              <th>Tracking Number</th>
+              <th>Ship Date</th>
+              <th>Expected Delivery</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="shipmentsBody">
+            <tr>
+              <td colspan="7" style="text-align: center; color: #999;">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Create Shipment Modal -->
+    <div class="modal" id="createShipmentModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Create Shipment</h2>
+          <button class="modal-close" onclick="closeModal('createShipmentModal')">×</button>
+        </div>
+        <form id="createShipmentForm">
+          <div id="shipmentError" class="alert alert-danger" style="display: none;"></div>
+
+          <div class="form-group">
+            <label class="form-label">Carrier Name</label>
+            <input type="text" class="form-control" id="carrierName" placeholder="e.g., FedEx, UPS" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tracking Number</label>
+            <input type="text" class="form-control" id="trackingNumber" placeholder="e.g., 1Z999AA10123456784" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Ship Date</label>
+            <input type="date" class="form-control" id="shipDate" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Expected Delivery Date</label>
+            <input type="date" class="form-control" id="deliveryDate" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Destination Address</label>
+            <textarea class="form-control" id="destination" placeholder="Full delivery address" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Notes</label>
+            <textarea class="form-control" id="notes" placeholder="Optional notes"></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%;">Create Shipment</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Shipment Details Modal -->
+    <div class="modal" id="shipmentDetailsModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="shipmentTitle">Shipment Details</h2>
+          <button class="modal-close" onclick="closeModal('shipmentDetailsModal')">×</button>
+        </div>
+        <div id="shipmentDetails"></div>
+      </div>
+    </div>
+
+    <script>
+      const API_URL = "http://localhost:3000"
+      let authToken = localStorage.getItem("authToken")
+
+      if (!authToken) {
+        window.location.href = "/login.html"
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const today = new Date().toISOString().split("T")[0]
+        document.getElementById("shipDate").value = today
+        loadAnalytics()
+        loadShipments()
+      })
+
+      async function loadAnalytics() {
+        try {
+          const response = await fetch(`${API_URL}/api/dispatch/analytics/summary`, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            document.getElementById("totalShipments").textContent = data.data.total_shipments
+
+            let pending = 0,
+              inTransit = 0
+
+            data.data.by_status.forEach((stat) => {
+              if (stat.status === "PENDING") pending = stat.count
+              if (stat.status === "IN_TRANSIT") inTransit = stat.count
+            })
+
+            document.getElementById("pending").textContent = pending
+            document.getElementById("inTransit").textContent = inTransit
+
+            const onTimePercent = data.data.total_shipments > 0 ? Math.round((data.data.on_time_deliveries / data.data.total_shipments) * 100) : 0
+            document.getElementById("onTime").textContent = `${onTimePercent}%`
+          }
+        } catch (error) {
+          console.error("[v0] Load analytics error:", error)
+        }
+      }
+
+      async function loadShipments() {
+        try {
+          const status = document.getElementById("statusFilter").value
+          let url = `${API_URL}/api/dispatch`
+          if (status) url += `?status=${status}`
+
+          const response = await fetch(url, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            renderShipments(data.data)
+          }
+        } catch (error) {
+          console.error("[v0] Load shipments error:", error)
+        }
+      }
+
+      function renderShipments(shipments) {
+        const tbody = document.getElementById("shipmentsBody")
+        tbody.innerHTML = ""
+
+        if (shipments.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="7" style="text-align: center; color: #999;">No shipments found</td></tr>'
+          return
+        }
+
+        shipments.forEach((shipment) => {
+          const statusBadge = `badge-${shipment.status.toLowerCase()}`
+          const shipDate = new Date(shipment.ship_date).toLocaleDateString()
+          const deliveryDate = shipment.expected_delivery_date
+            ? new Date(shipment.expected_delivery_date).toLocaleDateString()
+            : "N/A"
+
+          const row = `
+            <tr onclick="viewShipmentDetails(${shipment.id})">
+              <td><code>${shipment.shipment_number}</code></td>
+              <td>${shipment.carrier_name || "N/A"}</td>
+              <td>${shipment.tracking_number || "N/A"}</td>
+              <td>${shipDate}</td>
+              <td>${deliveryDate}</td>
+              <td><span class="badge ${statusBadge}">${shipment.status}</span></td>
+              <td><i class="bi bi-chevron-right"></i></td>
+            </tr>
+          `
+          tbody.innerHTML += row
+        })
+      }
+
+      function openCreateShipmentModal() {
+        document.getElementById("createShipmentModal").classList.add("active")
+      }
+
+      function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove("active")
+      }
+
+      document.getElementById("createShipmentForm").addEventListener("submit", async (e) => {
+        e.preventDefault()
+
+        const carrierName = document.getElementById("carrierName").value
+        const trackingNumber = document.getElementById("trackingNumber").value
+        const shipDate = document.getElementById("shipDate").value
+        const deliveryDate = document.getElementById("deliveryDate").value
+        const destination = document.getElementById("destination").value
+        const notes = document.getElementById("notes").value
+
+        try {
+          const response = await fetch(`${API_URL}/api/dispatch`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({
+              production_order_id: null,
+              ship_date: shipDate,
+              expected_delivery_date: deliveryDate,
+              carrier_name: carrierName,
+              tracking_number: trackingNumber,
+              destination_address: destination,
+              items: [],
+              notes,
+            }),
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            closeModal("createShipmentModal")
+            document.getElementById("createShipmentForm").reset()
+            const today = new Date().toISOString().split("T")[0]
+            document.getElementById("shipDate").value = today
+            loadShipments()
+            loadAnalytics()
+          } else {
+            document.getElementById("shipmentError").textContent = data.message
+            document.getElementById("shipmentError").style.display = "block"
+          }
+        } catch (error) {
+          console.error("[v0] Create shipment error:", error)
+        }
+      })
+
+      async function viewShipmentDetails(shipmentId) {
+        try {
+          const response = await fetch(`${API_URL}/api/dispatch/${shipmentId}`, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            const shipment = data.data.shipment
+            const items = data.data.items
+
+            document.getElementById("shipmentTitle").textContent = `${shipment.shipment_number}`
+
+            let detailsHTML = `
+              <div class="form-group">
+                <label class="form-label"><strong>Status:</strong></label>
+                <p><span class="badge badge-${shipment.status.toLowerCase()}">${shipment.status}</span></p>
+              </div>
+              <div class="form-group">
+                <label class="form-label"><strong>Carrier:</strong></label>
+                <p>${shipment.carrier_name || "N/A"}</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label"><strong>Tracking Number:</strong></label>
+                <p><code>${shipment.tracking_number || "N/A"}</code></p>
+              </div>
+              <div class="form-group">
+                <label class="form-label"><strong>Destination:</strong></label>
+                <p>${shipment.destination_address}</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label"><strong>Ship Date:</strong></label>
+                <p>${new Date(shipment.ship_date).toLocaleDateString()}</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label"><strong>Expected Delivery:</strong></label>
+                <p>${shipment.expected_delivery_date ? new Date(shipment.expected_delivery_date).toLocaleDateString() : "N/A"}</p>
+              </div>
+              ${shipment.actual_delivery_date ? `<div class="form-group"><label class="form-label"><strong>Delivered:</strong></label><p>${new Date(shipment.actual_delivery_date).toLocaleDateString()}</p></div>` : ""}
+              <div class="tracking-timeline">
+                <h5>Tracking Events</h5>
+                <div class="timeline-item">
+                  <div class="timeline-marker"><i class="bi bi-check"></i></div>
+                  <div class="timeline-content">
+                    <h5>Shipment Created</h5>
+                    <p>${new Date(shipment.created_at).toLocaleString()}</p>
+                  </div>
+                </div>
+                ${shipment.status === "IN_TRANSIT" || shipment.status === "DELIVERED" ? `
+                <div class="timeline-item">
+                  <div class="timeline-marker"><i class="bi bi-truck"></i></div>
+                  <div class="timeline-content">
+                    <h5>In Transit</h5>
+                    <p>${shipment.expected_delivery_date ? "On the way to " + shipment.destination_address.split(",")[0] : "Preparing for shipment"}</p>
+                  </div>
+                </div>
+                ` : ""}
+                ${shipment.status === "DELIVERED" ? `
+                <div class="timeline-item">
+                  <div class="timeline-marker"><i class="bi bi-check-circle"></i></div>
+                  <div class="timeline-content">
+                    <h5>Delivered</h5>
+                    <p>${new Date(shipment.actual_delivery_date).toLocaleString()}</p>
+                  </div>
+                </div>
+                ` : ""}
+              </div>
+            `
+
+            if (shipment.notes) {
+              detailsHTML += `<div class="form-group"><label class="form-label"><strong>Notes:</strong></label><p>${shipment.notes}</p></div>`
+            }
+
+            document.getElementById("shipmentDetails").innerHTML = detailsHTML
+            document.getElementById("shipmentDetailsModal").classList.add("active")
+          }
+        } catch (error) {
+          console.error("[v0] View shipment error:", error)
+        }
+      }
+
+      function logout() {
+        localStorage.removeItem("authToken")
+        localStorage.removeItem("user")
+        window.location.href = "/login.html"
+      }
+    </script>
+  </body>
+</html>

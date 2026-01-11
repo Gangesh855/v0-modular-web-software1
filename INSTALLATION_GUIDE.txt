@@ -1,0 +1,49 @@
+=== HOSTINGER PHP APPLICATION INSTALLATION GUIDE ===
+
+STEP 1: DATABASE SETUP
+1. Login to Hostinger cPanel
+2. Go to MySQL Databases
+3. Create new database: enterprise_management
+4. Create new MySQL user (remember username & password)
+5. Add user to database with ALL PRIVILEGES
+6. Go to phpMyAdmin
+7. Select the database
+8. Click "Import" tab
+9. Upload the database.sql file from this project
+10. Click "Go" to execute
+
+STEP 2: FILE UPLOAD
+1. Download the ZIP file from v0
+2. Extract all files locally
+3. Connect to your Hostinger account via FTP or cPanel File Manager
+4. Navigate to public_html folder
+5. Upload ALL files maintaining the same folder structure:
+   - config/ folder
+   - api/ folder
+   - public/ folder
+   - index.php
+   - .htaccess
+
+STEP 3: CONFIGURATION
+1. Open config/database.php in a text editor
+2. Update these values with your Hostinger database info:
+   - $db_user = 'your_hostinger_user'
+   - $db_pass = 'your_hostinger_password'
+   - $db_name = 'enterprise_management'
+   - $db_host = 'localhost' (usually stays the same)
+
+STEP 4: VERIFICATION
+1. Open your browser
+2. Go to: https://yourdomainname.com/public/login.html
+3. Login with:
+   - Username: admin
+   - Password: admin123
+4. You should see the Dashboard
+
+STEP 5: IMPORTANT SECURITY STEPS
+1. Change the admin password immediately after first login
+2. Create new user accounts for team members
+3. Disable file uploads if not needed
+4. Keep PHP updated in Hostinger settings
+
+FILE STRUCTURE:

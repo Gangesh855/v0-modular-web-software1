@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Production - Enterprise Management System</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <style>
+      :root {
+        --primary: #1a1a1a;
+        --secondary: #2d2d2d;
+        --tertiary: #3a3a3a;
+        --accent: #00a86b;
+        --accent-dark: #008c57;
+        --text: #f0f0f0;
+        --text-muted: #999;
+        --border: #444;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--primary);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+
+      .navbar {
+        background-color: var(--secondary);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+      }
+
+      .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      .navbar-nav .nav-link {
+        color: var(--text);
+        margin: 0 0.5rem;
+        transition: color 0.3s;
+      }
+
+      .navbar-nav .nav-link:hover {
+        color: var(--accent);
+      }
+
+      .navbar-nav .nav-link.active {
+        color: var(--accent);
+        border-bottom: 2px solid var(--accent);
+      }
+
+      .container-fluid {
+        padding: 2rem;
+      }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .btn-primary {
+        background-color: var(--accent);
+        border: none;
+        padding: 0.6rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--accent-dark);
+        transform: translateY(-2px);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .stat-icon {
+        font-size: 2rem;
+        color: var(--accent);
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 168, 107, 0.1);
+        border-radius: 8px;
+      }
+
+      .stat-content h3 {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin: 0;
+        font-weight: 500;
+      }
+
+      .stat-content p {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0.25rem 0 0;
+        color: var(--text);
+      }
+
+      .filters {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .filter-group {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      .filter-group label {
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .filter-group select {
+        background-color: var(--tertiary);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .table-container {
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+      }
+
+      .table {
+        margin: 0;
+        color: var(--text);
+      }
+
+      .table thead {
+        background-color: var(--tertiary);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .table thead th {
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 1rem;
+        border: none;
+      }
+
+      .table tbody td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+      }
+
+      .table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .table tbody tr:hover {
+        background-color: var(--tertiary);
+        cursor: pointer;
+      }
+
+      .badge {
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .badge-planned {
+        background-color: rgba(153, 153, 153, 0.2);
+        color: #ccc;
+      }
+
+      .badge-scheduled {
+        background-color: rgba(255, 193, 7, 0.2);
+        color: #ffd43b;
+      }
+
+      .badge-in_progress {
+        background-color: rgba(0, 168, 107, 0.2);
+        color: #69db7c;
+      }
+
+      .badge-completed {
+        background-color: rgba(40, 167, 69, 0.2);
+        color: #51cf66;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .modal-header h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 1.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      .form-control,
+      .form-select {
+        background-color: var(--tertiary);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        width: 100%;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        background-color: var(--tertiary);
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 168, 107, 0.1);
+      }
+
+      .stages-timeline {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .stage-item {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background-color: var(--tertiary);
+        border-radius: 6px;
+        border-left: 4px solid var(--text-muted);
+      }
+
+      .stage-item.pending {
+        border-left-color: #999;
+      }
+
+      .stage-item.in-progress {
+        border-left-color: #ffd43b;
+      }
+
+      .stage-item.completed {
+        border-left-color: #51cf66;
+      }
+
+      .stage-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .stage-name {
+        font-weight: 600;
+      }
+
+      .stage-status {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .alert {
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+      }
+
+      .alert-danger {
+        background-color: rgba(220, 53, 69, 0.1);
+        border: 1px solid #dc3545;
+        color: #ff6b6b;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container-fluid">
+        <span class="navbar-brand">
+          <i class="bi bi-hammer"></i> Enterprise
+        </span>
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link active" href="/production-dashboard.html">Production</a>
+          <a class="nav-link" href="/foundry-dashboard.html">Foundry</a>
+          <a class="nav-link" href="/purchases-dashboard.html">Purchases</a>
+          <a class="nav-link" href="#" onclick="logout()">Logout</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid">
+      <div class="page-header">
+        <h1>Production Management</h1>
+        <button class="btn-primary" onclick="openCreateOrderModal()">
+          <i class="bi bi-plus-lg"></i> New Order
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-list-task"></i></div>
+          <div class="stat-content">
+            <h3>Total Orders</h3>
+            <p id="totalOrders">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
+          <div class="stat-content">
+            <h3>In Progress</h3>
+            <p id="inProgress">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-check-circle"></i></div>
+          <div class="stat-content">
+            <h3>Completed</h3>
+            <p id="completed">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-clock"></i></div>
+          <div class="stat-content">
+            <h3>Avg Completion</h3>
+            <p id="avgTime">0h</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <div class="filter-group">
+          <label>Status:</label>
+          <select id="statusFilter" onchange="loadOrders()">
+            <option value="">All</option>
+            <option value="PLANNED">Planned</option>
+            <option value="SCHEDULED">Scheduled</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="CANCELLED">Cancelled</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Production Orders Table -->
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Order Number</th>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ordersBody">
+            <tr>
+              <td colspan="7" style="text-align: center; color: #999;">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Create Order Modal -->
+    <div class="modal" id="createOrderModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Create Production Order</h2>
+          <button class="modal-close" onclick="closeModal('createOrderModal')">×</button>
+        </div>
+        <form id="createOrderForm">
+          <div id="orderError" class="alert alert-danger" style="display: none;"></div>
+
+          <div class="form-group">
+            <label class="form-label">Product</label>
+            <select class="form-select" id="productId" required>
+              <option value="">Select a product...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Quantity</label>
+            <input type="number" class="form-control" id="quantity" placeholder="0" required min="1" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Start Date</label>
+            <input type="date" class="form-control" id="startDate" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">End Date</label>
+            <input type="date" class="form-control" id="endDate" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Notes</label>
+            <textarea class="form-control" id="notes" placeholder="Optional notes"></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%;">Create Order</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal" id="orderDetailsModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="orderTitle">Production Order</h2>
+          <button class="modal-close" onclick="closeModal('orderDetailsModal')">×</button>
+        </div>
+        <div id="orderDetails"></div>
+      </div>
+    </div>
+
+    <script>
+      const API_URL = "http://localhost:3000"
+      let authToken = localStorage.getItem("authToken")
+
+      if (!authToken) {
+        window.location.href = "/login.html"
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        loadProducts()
+        loadAnalytics()
+        loadOrders()
+      })
+
+      async function loadProducts() {
+        try {
+          const response = await fetch(`${API_URL}/api/production/products`, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            const select = document.getElementById("productId")
+            select.innerHTML = '<option value="">Select a product...</option>'
+            data.data.forEach((product) => {
+              const option = document.createElement("option")
+              option.value = product.id
+              option.textContent = product.name
+              select.appendChild(option)
+            })
+          }
+        } catch (error) {
+          console.error("[v0] Load products error:", error)
+        }
+      }
+
+      async function loadAnalytics() {
+        try {
+          const response = await fetch(`${API_URL}/api/production/analytics/summary`, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            document.getElementById("totalOrders").textContent = data.data.total_orders
+
+            let inProg = 0,
+              comp = 0
+
+            data.data.by_status.forEach((stat) => {
+              if (stat.status === "IN_PROGRESS") inProg = stat.count
+              if (stat.status === "COMPLETED") comp = stat.count
+            })
+
+            document.getElementById("inProgress").textContent = inProg
+            document.getElementById("completed").textContent = comp
+            document.getElementById("avgTime").textContent = `${Math.round(data.data.average_completion_hours)}h`
+          }
+        } catch (error) {
+          console.error("[v0] Load analytics error:", error)
+        }
+      }
+
+      async function loadOrders() {
+        try {
+          const status = document.getElementById("statusFilter").value
+          let url = `${API_URL}/api/production`
+          if (status) url += `?status=${status}`
+
+          const response = await fetch(url, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            renderOrders(data.data)
+          }
+        } catch (error) {
+          console.error("[v0] Load orders error:", error)
+        }
+      }
+
+      function renderOrders(orders) {
+        const tbody = document.getElementById("ordersBody")
+        tbody.innerHTML = ""
+
+        if (orders.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="7" style="text-align: center; color: #999;">No orders found</td></tr>'
+          return
+        }
+
+        orders.forEach((order) => {
+          const statusBadge = `badge-${order.status.toLowerCase()}`
+          const startDate = order.start_date ? new Date(order.start_date).toLocaleDateString() : "N/A"
+          const endDate = order.end_date ? new Date(order.end_date).toLocaleDateString() : "N/A"
+
+          const row = `
+            <tr onclick="viewOrderDetails(${order.id})">
+              <td><code>${order.order_number}</code></td>
+              <td>${order.product_name}</td>
+              <td>${order.quantity}</td>
+              <td>${startDate}</td>
+              <td>${endDate}</td>
+              <td><span class="badge ${statusBadge}">${order.status}</span></td>
+              <td><i class="bi bi-chevron-right"></i></td>
+            </tr>
+          `
+          tbody.innerHTML += row
+        })
+      }
+
+      function openCreateOrderModal() {
+        document.getElementById("startDate").valueAsDate = new Date()
+        document.getElementById("createOrderModal").classList.add("active")
+      }
+
+      function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove("active")
+      }
+
+      document.getElementById("createOrderForm").addEventListener("submit", async (e) => {
+        e.preventDefault()
+
+        const productId = document.getElementById("productId").value
+        const quantity = document.getElementById("quantity").value
+        const startDate = document.getElementById("startDate").value
+        const endDate = document.getElementById("endDate").value
+        const notes = document.getElementById("notes").value
+
+        try {
+          const response = await fetch(`${API_URL}/api/production`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({
+              product_id: productId,
+              quantity: parseInt(quantity),
+              start_date: startDate,
+              end_date: endDate,
+              notes,
+            }),
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            closeModal("createOrderModal")
+            document.getElementById("createOrderForm").reset()
+            loadOrders()
+            loadAnalytics()
+          } else {
+            document.getElementById("orderError").textContent = data.message
+            document.getElementById("orderError").style.display = "block"
+          }
+        } catch (error) {
+          console.error("[v0] Create order error:", error)
+        }
+      })
+
+      async function viewOrderDetails(orderId) {
+        try {
+          const response = await fetch(`${API_URL}/api/production/${orderId}`, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            const order = data.data.production_order
+            const stages = data.data.stages
+
+            document.getElementById("orderTitle").textContent = `${order.order_number}`
+
+            let stagesHTML = `
+              <div class="form-group">
+                <label class="form-label"><strong>Product:</strong></label>
+                <p>${order.product_name}</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label"><strong>Status:</strong></label>
+                <p><span class="badge badge-${order.status.toLowerCase()}">${order.status}</span></p>
+              </div>
+              <div class="form-group">
+                <label class="form-label"><strong>Quantity:</strong></label>
+                <p>${order.quantity}</p>
+              </div>
+              <div class="stages-timeline">
+                <h5 style="margin-bottom: 1rem;">Production Stages</h5>
+            `
+
+            stages.forEach((stage) => {
+              const stageClass = stage.status.toLowerCase().replace("_", "-")
+              const operator = stage.first_name ? `${stage.first_name} ${stage.last_name}` : "Unassigned"
+
+              stagesHTML += `
+                <div class="stage-item ${stageClass}">
+                  <div class="stage-header">
+                    <span class="stage-name">${stage.stage_sequence}. ${stage.stage_name}</span>
+                    <span class="badge badge-${stage.status.toLowerCase()}">${stage.status}</span>
+                  </div>
+                  <div class="stage-status">
+                    <small>Operator: ${operator}</small>
+                  </div>
+                  ${stage.quality_notes ? `<div style="margin-top: 0.5rem; font-size: 0.9rem; color: #999;">Notes: ${stage.quality_notes}</div>` : ""}
+                </div>
+              `
+            })
+
+            stagesHTML += `</div>`
+
+            document.getElementById("orderDetails").innerHTML = stagesHTML
+            document.getElementById("orderDetailsModal").classList.add("active")
+          }
+        } catch (error) {
+          console.error("[v0] View order error:", error)
+        }
+      }
+
+      function logout() {
+        localStorage.removeItem("authToken")
+        localStorage.removeItem("user")
+        window.location.href = "/login.html"
+      }
+    </script>
+  </body>
+</html>

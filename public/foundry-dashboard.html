@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Foundry - Enterprise Management System</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <style>
+      :root {
+        --primary: #1a1a1a;
+        --secondary: #2d2d2d;
+        --tertiary: #3a3a3a;
+        --accent: #ff6b35;
+        --accent-dark: #e55a2b;
+        --text: #f0f0f0;
+        --text-muted: #999;
+        --border: #444;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--primary);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+
+      .navbar {
+        background-color: var(--secondary);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+      }
+
+      .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      .navbar-nav .nav-link {
+        color: var(--text);
+        margin: 0 0.5rem;
+        transition: color 0.3s;
+      }
+
+      .navbar-nav .nav-link:hover {
+        color: var(--accent);
+      }
+
+      .navbar-nav .nav-link.active {
+        color: var(--accent);
+        border-bottom: 2px solid var(--accent);
+      }
+
+      .container-fluid {
+        padding: 2rem;
+      }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .btn-primary {
+        background-color: var(--accent);
+        border: none;
+        padding: 0.6rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--accent-dark);
+        transform: translateY(-2px);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .stat-icon {
+        font-size: 2rem;
+        color: var(--accent);
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255, 107, 53, 0.1);
+        border-radius: 8px;
+      }
+
+      .stat-content h3 {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin: 0;
+        font-weight: 500;
+      }
+
+      .stat-content p {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0.25rem 0 0;
+        color: var(--text);
+      }
+
+      .filters {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .filter-group {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      .filter-group label {
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .filter-group select {
+        background-color: var(--tertiary);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .batches-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .batch-card {
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+
+      .batch-card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+      }
+
+      .batch-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .batch-card h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .badge {
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .badge-planned {
+        background-color: rgba(153, 153, 153, 0.2);
+        color: #ccc;
+      }
+
+      .badge-in_progress {
+        background-color: rgba(255, 193, 7, 0.2);
+        color: #ffd43b;
+      }
+
+      .badge-completed {
+        background-color: rgba(40, 167, 69, 0.2);
+        color: #51cf66;
+      }
+
+      .badge-failed {
+        background-color: rgba(220, 53, 69, 0.2);
+        color: #ff6b6b;
+      }
+
+      .batch-info {
+        font-size: 0.9rem;
+        margin: 0.5rem 0;
+      }
+
+      .batch-info strong {
+        color: var(--text-muted);
+        display: inline-block;
+        width: 100px;
+      }
+
+      .batch-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        background-color: var(--accent);
+        border: none;
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .btn-sm:hover {
+        background-color: var(--accent-dark);
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .modal-header h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 1.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      .form-control,
+      .form-select {
+        background-color: var(--tertiary);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        width: 100%;
+        transition: all 0.3s;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        background-color: var(--tertiary);
+        border-color: var(--accent);
+        color: var(--text);
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+      }
+
+      .alert {
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+      }
+
+      .alert-danger {
+        background-color: rgba(220, 53, 69, 0.1);
+        border: 1px solid #dc3545;
+        color: #ff6b6b;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container-fluid">
+        <span class="navbar-brand">
+          <i class="bi bi-fire"></i> Enterprise
+        </span>
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link active" href="/foundry-dashboard.html">Foundry</a>
+          <a class="nav-link" href="/purchases-dashboard.html">Purchases</a>
+          <a class="nav-link" href="/stores-dashboard.html">Stores</a>
+          <a class="nav-link" href="#" onclick="logout()">Logout</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid">
+      <div class="page-header">
+        <h1>Foundry Operations</h1>
+        <button class="btn-primary" onclick="openCreateBatchModal()">
+          <i class="bi bi-plus-lg"></i> New Batch
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-diagram-3"></i></div>
+          <div class="stat-content">
+            <h3>Total Batches</h3>
+            <p id="totalBatches">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
+          <div class="stat-content">
+            <h3>In Progress</h3>
+            <p id="inProgress">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-check-circle"></i></div>
+          <div class="stat-content">
+            <h3>Completed</h3>
+            <p id="completed">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-graph-up"></i></div>
+          <div class="stat-content">
+            <h3>Avg Yield</h3>
+            <p id="avgYield">0%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <div class="filter-group">
+          <label>Status:</label>
+          <select id="statusFilter" onchange="loadBatches()">
+            <option value="">All</option>
+            <option value="PLANNED">Planned</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="FAILED">Failed</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Batches Grid -->
+      <h2 style="margin: 2rem 0 1rem; font-weight: 700;">Active Batches</h2>
+      <div class="batches-grid" id="batchesGrid"></div>
+    </div>
+
+    <!-- Create Batch Modal -->
+    <div class="modal" id="createBatchModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Create New Batch</h2>
+          <button class="modal-close" onclick="closeModal('createBatchModal')">×</button>
+        </div>
+        <form id="createBatchForm">
+          <div id="batchError" class="alert alert-danger" style="display: none;"></div>
+
+          <div class="form-group">
+            <label class="form-label">Process</label>
+            <select class="form-select" id="processId" required>
+              <option value="">Select a process...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Material</label>
+            <select class="form-select" id="materialId" required>
+              <option value="">Select material...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Quantity</label>
+            <input type="number" class="form-control" id="quantity" placeholder="0" required min="1" />
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%;">Create Batch</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Batch Details Modal -->
+    <div class="modal" id="batchDetailsModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="batchTitle">Batch Details</h2>
+          <button class="modal-close" onclick="closeModal('batchDetailsModal')">×</button>
+        </div>
+        <div id="batchDetails"></div>
+      </div>
+    </div>
+
+    <script>
+      const API_URL = "http://localhost:3000"
+      let authToken = localStorage.getItem("authToken")
+
+      if (!authToken) {
+        window.location.href = "/login.html"
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        loadProcesses()
+        loadMaterials()
+        loadAnalytics()
+        loadBatches()
+      })
+
+      async function loadProcesses() {
+        try {
+          const response = await fetch(`${API_URL}/api/foundry/processes`, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            const select = document.getElementById("processId")
+            select.innerHTML = '<option value="">Select a process...</option>'
+            data.data.forEach((process) => {
+              const option = document.createElement("option")
+              option.value = process.id
+              option.textContent = process.process_name
+              select.appendChild(option)
+            })
+          }
+        } catch (error) {
+          console.error("[v0] Load processes error:", error)
+        }
+      }
+
+      async function loadMaterials() {
+        try {
+          const response = await fetch(`${API_URL}/api/foundry/materials`, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            const select = document.getElementById("materialId")
+            select.innerHTML = '<option value="">Select material...</option>'
+            data.data.forEach((material) => {
+              const option = document.createElement("option")
+              option.value = material.id
+              option.textContent = material.name
+              select.appendChild(option)
+            })
+          }
+        } catch (error) {
+          console.error("[v0] Load materials error:", error)
+        }
+      }
+
+      async function loadAnalytics() {
+        try {
+          const response = await fetch(`${API_URL}/api/foundry/analytics/summary`, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            document.getElementById("totalBatches").textContent = data.data.total_batches
+
+            let inProg = 0,
+              comp = 0
+
+            data.data.by_status.forEach((stat) => {
+              if (stat.status === "IN_PROGRESS") inProg = stat.count
+              if (stat.status === "COMPLETED") comp = stat.count
+            })
+
+            document.getElementById("inProgress").textContent = inProg
+            document.getElementById("completed").textContent = comp
+            document.getElementById("avgYield").textContent = `${Math.round(data.data.average_yield)}%`
+          }
+        } catch (error) {
+          console.error("[v0] Load analytics error:", error)
+        }
+      }
+
+      async function loadBatches() {
+        try {
+          const status = document.getElementById("statusFilter").value
+          let url = `${API_URL}/api/foundry/batches`
+          if (status) url += `?status=${status}`
+
+          const response = await fetch(url, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            renderBatches(data.data)
+          }
+        } catch (error) {
+          console.error("[v0] Load batches error:", error)
+        }
+      }
+
+      function renderBatches(batches) {
+        const grid = document.getElementById("batchesGrid")
+        grid.innerHTML = ""
+
+        if (batches.length === 0) {
+          grid.innerHTML = '<p style="color: #999; grid-column: 1/-1;">No batches found</p>'
+          return
+        }
+
+        batches.forEach((batch) => {
+          const statusBadge = `badge-${batch.status.toLowerCase()}`
+          const duration = batch.end_date
+            ? Math.round((new Date(batch.end_date) - new Date(batch.start_date)) / 60000)
+            : "In progress"
+
+          const card = `
+            <div class="batch-card" onclick="viewBatchDetails(${batch.id})">
+              <div class="batch-card-header">
+                <h3>${batch.batch_number}</h3>
+                <span class="badge ${statusBadge}">${batch.status}</span>
+              </div>
+              <div class="batch-info">
+                <strong>Process:</strong> ${batch.process_name}
+              </div>
+              <div class="batch-info">
+                <strong>Material:</strong> ${batch.material_name}
+              </div>
+              <div class="batch-info">
+                <strong>Quantity:</strong> ${batch.quantity} units
+              </div>
+              <div class="batch-info">
+                <strong>Duration:</strong> ${duration} mins
+              </div>
+              <div class="batch-actions">
+                <button class="btn-sm" onclick="startBatch(${batch.id}, event)" ${batch.status !== 'PLANNED' ? 'disabled' : ''}>
+                  Start
+                </button>
+                <button class="btn-sm" onclick="completeBatch(${batch.id}, event)" ${batch.status !== 'IN_PROGRESS' ? 'disabled' : ''}>
+                  Complete
+                </button>
+              </div>
+            </div>
+          `
+          grid.innerHTML += card
+        })
+      }
+
+      function openCreateBatchModal() {
+        document.getElementById("createBatchModal").classList.add("active")
+      }
+
+      function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove("active")
+      }
+
+      document.getElementById("createBatchForm").addEventListener("submit", async (e) => {
+        e.preventDefault()
+
+        const processId = document.getElementById("processId").value
+        const materialId = document.getElementById("materialId").value
+        const quantity = document.getElementById("quantity").value
+
+        try {
+          const response = await fetch(`${API_URL}/api/foundry/batches`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({
+              process_id: processId,
+              material_id: materialId,
+              quantity: parseInt(quantity),
+            }),
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            closeModal("createBatchModal")
+            document.getElementById("createBatchForm").reset()
+            loadBatches()
+            loadAnalytics()
+          } else {
+            document.getElementById("batchError").textContent = data.message
+            document.getElementById("batchError").style.display = "block"
+          }
+        } catch (error) {
+          console.error("[v0] Create batch error:", error)
+        }
+      })
+
+      async function viewBatchDetails(batchId) {
+        try {
+          const response = await fetch(`${API_URL}/api/foundry/batches/${batchId}`, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            const batch = data.data
+            document.getElementById("batchTitle").textContent = batch.batch_number
+
+            const html = `
+              <div class="form-group">
+                <strong>Status:</strong> <span class="badge badge-${batch.status.toLowerCase()}">${batch.status}</span>
+              </div>
+              <div class="form-group">
+                <strong>Process:</strong> ${batch.process_name}
+              </div>
+              <div class="form-group">
+                <strong>Material:</strong> ${batch.material_name}
+              </div>
+              <div class="form-group">
+                <strong>Quantity:</strong> ${batch.quantity} units
+              </div>
+              <div class="form-group">
+                <strong>Temperature:</strong> ${batch.temperature}°C
+              </div>
+              <div class="form-group">
+                <strong>Expected Yield:</strong> ${batch.yield_percentage}%
+              </div>
+              <div class="form-group">
+                <strong>Quality Check:</strong> ${batch.quality_check_result || "Pending"}
+              </div>
+              ${batch.notes ? `<div class="form-group"><strong>Notes:</strong> ${batch.notes}</div>` : ""}
+            `
+
+            document.getElementById("batchDetails").innerHTML = html
+            document.getElementById("batchDetailsModal").classList.add("active")
+          }
+        } catch (error) {
+          console.error("[v0] View batch error:", error)
+        }
+      }
+
+      async function startBatch(batchId, event) {
+        event.stopPropagation()
+        try {
+          const response = await fetch(`${API_URL}/api/foundry/batches/${batchId}/start`, {
+            method: "PUT",
+            headers: { Authorization: `Bearer ${authToken}` },
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            loadBatches()
+            loadAnalytics()
+          }
+        } catch (error) {
+          console.error("[v0] Start batch error:", error)
+        }
+      }
+
+      async function completeBatch(batchId, event) {
+        event.stopPropagation()
+        const notes = prompt("Enter quality notes:")
+        if (notes === null) return
+
+        try {
+          const response = await fetch(`${API_URL}/api/foundry/batches/${batchId}/complete`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({
+              quality_check_result: "PASSED",
+              notes,
+            }),
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            loadBatches()
+            loadAnalytics()
+          }
+        } catch (error) {
+          console.error("[v0] Complete batch error:", error)
+        }
+      }
+
+      function logout() {
+        localStorage.removeItem("authToken")
+        localStorage.removeItem("user")
+        window.location.href = "/login.html"
+      }
+    </script>
+  </body>
+</html>

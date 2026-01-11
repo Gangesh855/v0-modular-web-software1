@@ -1,0 +1,276 @@
+════════════════════════════════════════════════════════════════════════════════
+     ENTERPRISE MANAGEMENT SYSTEM - DEPLOYMENT CHECKLIST FOR HOSTINGER
+════════════════════════════════════════════════════════════════════════════════
+
+BEFORE DEPLOYMENT
+═════════════════
+☐ Review all documentation in README.md
+☐ Have Hostinger login credentials ready
+☐ Create backup of any existing data
+☐ Test all files locally (optional but recommended)
+☐ Prepare list of team members who need access
+
+
+STEP 1: DATABASE SETUP (Estimated time: 10 minutes)
+════════════════════════════════════════════════════
+☐ Log in to Hostinger cPanel
+☐ Go to "MySQL Databases" section
+☐ Create new database:
+   ☐ Name: enterprise_management
+   ☐ Record the database name
+☐ Create MySQL user:
+   ☐ Username: ent_user (or your choice)
+   ☐ Generate strong password (copy to secure location)
+   ☐ Confirm password
+☐ Add user to database with ALL PRIVILEGES
+☐ In phpMyAdmin, select the database
+☐ Click Import tab
+☐ Upload database.sql file
+☐ Click "Go" to execute
+☐ Verify all 15+ tables were created successfully
+
+
+STEP 2: CONFIGURATION (Estimated time: 5 minutes)
+═══════════════════════════════════════════════════
+☐ Open config/database.php in text editor
+☐ Update database credentials:
+   ☐ $db_host = "localhost"
+   ☐ $db_user = "ent_user" (your MySQL username)
+   ☐ $db_pass = "your_password" (your MySQL password)
+   ☐ $db_name = "enterprise_management"
+☐ Save file
+☐ Do NOT share this file - contains sensitive credentials
+
+
+STEP 3: FILE UPLOAD (Estimated time: 15-30 minutes)
+═════════════════════════════════════════════════════
+☐ Extract all project files to a folder on your computer
+☐ Connect to Hostinger via cPanel File Manager or FTP
+☐ Navigate to public_html folder
+☐ Upload files maintaining exact folder structure:
+   ☐ config/ (3 files)
+   ☐ api/ (8 files)
+   ☐ public/ (5 files including .htaccess)
+   ☐ index.php
+   ☐ .htaccess
+   ☐ database.sql
+☐ Verify folder structure:
+   ☐ public_html/config/database.php exists
+   ☐ public_html/api/auth.php exists
+   ☐ public_html/public/login.html exists
+   ☐ public_html/public/.htaccess exists
+☐ Set file permissions (if manual access):
+   ☐ Files: 644
+   ☐ Directories: 755
+
+
+STEP 4: VERIFICATION (Estimated time: 5 minutes)
+═════════════════════════════════════════════════
+☐ Open browser (Chrome/Firefox recommended)
+☐ Go to: https://yourdomain.com/public/login.html
+☐ Verify login page displays correctly
+☐ Check for no JavaScript console errors (press F12)
+☐ Test login with admin / admin123
+☐ Verify dashboard loads after login
+☐ Verify you can navigate modules
+☐ Test logout function
+
+
+STEP 5: SECURITY & CLEANUP (Estimated time: 10 minutes)
+═══════════════════════════════════════════════════════
+☐ Delete or rename database.sql file (no longer needed)
+☐ Change admin password:
+   ☐ Log out and back in as admin
+   ☐ Change password through user profile
+   ☐ Test new password works
+☐ Create team user accounts for each team member:
+   ☐ Use registration page at /public/register.html
+   ☐ Or direct database insert with appropriate role
+☐ Assign appropriate roles:
+   ☐ Admin: System administrators only
+   ☐ Manager: Department heads
+   ☐ Operator: Data entry staff
+   ☐ Auditor: Compliance/audit team
+☐ Disable registration (if needed):
+   ☐ Edit public/register.html to restrict access
+   ☐ Or manually create all accounts
+
+
+STEP 6: TEST EACH MODULE (Estimated time: 30 minutes)
+═════════════════════════════════════════════════════
+☐ STORES MODULE:
+   ☐ Create a test store
+   ☐ Add inventory items
+   ☐ Process a transaction
+   ☐ Check low-stock alerts
+   ☐ Verify inventory table displays correctly
+
+☐ PURCHASES MODULE:
+   ☐ Create a test supplier
+   ☐ Create a purchase order
+   ☐ Test PO status workflow
+   ☐ Verify PO data saves correctly
+
+☐ FOUNDRY MODULE:
+   ☐ Create test material
+   ☐ Create test process
+   ☐ Create test batch
+   ☐ Start and complete batch
+   ☐ Verify yield calculation
+
+☐ PRODUCTION MODULE:
+   ☐ Create test product
+   ☐ Create production order
+   ☐ Verify stages are created
+   ☐ Update stage status
+   ☐ Complete production order
+
+☐ DISPATCH MODULE:
+   ☐ Create test shipment
+   ☐ Update shipment status
+   ☐ Add tracking events
+   ☐ View delivery metrics
+
+☐ HR MODULE:
+   ☐ Create test employee
+   ☐ Update employee info
+   ☐ Test department filtering
+
+☐ DIE SHOP MODULE:
+   ☐ Create test equipment
+   ☐ Schedule maintenance
+   ☐ View maintenance due list
+
+
+STEP 7: DATA VALIDATION (Estimated time: 15 minutes)
+═══════════════════════════════════════════════════════
+☐ Test role-based access:
+   ☐ Log in as Manager - verify limited access
+   ☐ Log in as Operator - verify correct permissions
+   ☐ Log in as Auditor - verify read-only access
+☐ Verify audit logging:
+   ☐ Check audit logs for all actions
+   ☐ Verify user ID is recorded
+   ☐ Verify timestamps are correct
+☐ Test data relationships:
+   ☐ Verify purchase to inventory update
+   ☐ Verify foundry batch integrity
+   ☐ Verify production order workflow
+   ☐ Verify shipment to order link
+
+
+STEP 8: BACKUP & DOCUMENTATION (Estimated time: 10 minutes)
+════════════════════════════════════════════════════════════
+☐ Create initial backup of database:
+   ☐ phpMyAdmin → Export → SQL format
+   ☐ Save to secure location
+   ☐ Label with deployment date
+☐ Create backup of files:
+   ☐ cPanel File Manager → Compress all files
+   ☐ Download backup
+   ☐ Save to secure location
+☐ Document deployment info:
+   ☐ Domain: _________________________________
+   ☐ Database name: _________________________
+   ☐ MySQL user: _____________________________
+   ☐ Admin password: (secure location, don't write here)
+   ☐ Deployment date: ________________________
+   ☐ Team members added: ______________________
+☐ Create runbook for common tasks:
+   ☐ How to add new user
+   ☐ How to backup database
+   ☐ How to restore from backup
+   ☐ Emergency contacts
+
+
+STEP 9: TRAINING & HANDOVER (Estimated time: 30+ minutes)
+═══════════════════════════════════════════════════════════
+☐ Train team members:
+   ☐ Show how to log in
+   ☐ Explain each module's purpose
+   ☐ Demonstrate common workflows
+   ☐ Explain role permissions
+   ☐ Show how to get help
+☐ Distribute documentation:
+   ☐ README.md to all users
+   ☐ Module guides to relevant departments
+   ☐ Administrator guide to IT team
+☐ Set up support procedures:
+   ☐ Who to contact for technical issues
+   ☐ How to report bugs
+   ☐ How to request features
+
+
+STEP 10: ONGOING MAINTENANCE
+═════════════════════════════
+☐ Daily checks:
+   ☐ Monitor system for errors
+   ☐ Check user activity
+   ☐ Verify data integrity
+☐ Weekly tasks:
+   ☐ Review audit logs
+   ☐ Create backup
+   ☐ Check disk usage
+☐ Monthly tasks:
+   ☐ Update PHP if new version available
+   ☐ Review and clean old logs
+   ☐ Verify backup restoration works
+☐ Quarterly tasks:
+   ☐ Review access logs
+   ☐ Audit user permissions
+   ☐ Plan infrastructure upgrades
+☐ Annually:
+   ☐ Full security audit
+   ☐ Update documentation
+   ☐ Disaster recovery testing
+
+
+TROUBLESHOOTING QUICK REFERENCE
+════════════════════════════════
+
+ISSUE: 403 Forbidden
+→ Check all files uploaded to public_html
+→ Verify .htaccess file exists in both root and public/
+→ Check file permissions (644 for files)
+
+ISSUE: Database Connection Error
+→ Verify MySQL credentials in config/database.php
+→ Verify database exists in cPanel
+→ Verify MySQL user has privileges
+→ Test connection in phpMyAdmin
+
+ISSUE: Login Fails
+→ Verify admin user exists in database
+→ Try default credentials: admin / admin123
+→ Check user is_active = TRUE
+→ Verify password hash in database
+
+ISSUE: Blank Dashboard
+→ Check browser console (F12) for errors
+→ Verify API responses in Network tab
+→ Check PHP error logs in cPanel
+→ Verify database tables were imported
+
+ISSUE: Module Pages Show "Coming Soon"
+→ This is expected in this version
+→ Dashboard and API are fully functional
+→ Module UIs will be added in future updates
+
+
+DEPLOYMENT SIGN-OFF
+═══════════════════
+☐ All steps completed
+☐ All modules tested and working
+☐ Team trained and documented
+☐ Backups created and verified
+☐ Emergency procedures documented
+☐ System ready for production use
+
+Deployment completed by: _____________________
+Date: ________________
+Verified by: _____________________
+
+
+════════════════════════════════════════════════════════════════════════════════
+For support, contact Hostinger support or consult the README.md file.
+════════════════════════════════════════════════════════════════════════════════

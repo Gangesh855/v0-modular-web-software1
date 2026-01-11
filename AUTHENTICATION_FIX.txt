@@ -1,0 +1,105 @@
+=============================================================================
+AUTHENTICATION FIX FOR HOSTINGER
+=============================================================================
+
+ISSUE: "Unauthorized: Please login first" error on login page
+
+SOLUTION: Token-based authentication implemented instead of PHP sessions
+
+=============================================================================
+KEY CHANGES MADE:
+=============================================================================
+
+1. config/functions.php
+   - Added generateJWT() function to create secure tokens
+   - Added verifyJWT() function to validate tokens
+   - Tokens expire after 7 days
+
+2. api/auth.php
+   - Updated handleLogin() to return token in response
+   - Added handleVerifyToken() endpoint for token validation
+   - Maintains session as backup for compatibility
+
+3. public/login.html
+   - Now stores token in localStorage on successful login
+   - Console logs show [v0] prefix for easy debugging
+
+4. public/dashboard.html
+   - Checks for token in localStorage on page load
+   - Verifies token with server before allowing access
+   - Properly logs out users by clearing localStorage
+
+=============================================================================
+HOW TO TEST:
+=============================================================================
+
+1. OPEN BROWSER DEVELOPER CONSOLE (F12)
+   - Go to Console tab
+   - Look for [v0] prefixed messages
+
+2. ATTEMPT LOGIN
+   - Username: admin
+   - Password: admin123
+   - You should see: "[v0] Login response: {success: true, token: ...}"
+   - Then: "[v0] User authenticated: {id: 1, username: 'admin', ...}"
+
+3. IF YOU GET "No token found" ERROR
+   - This means login didn't store the token
+   - Check Network tab (F12) for failed requests
+   - Verify /api/auth?action=login returns {success: true, token: "..."}
+
+4. IF YOU GET "Token verification failed" ERROR
+   - The server couldn't validate the token
+   - Check if database connection works
+   - Verify users table exists in database
+
+=============================================================================
+IF ISSUES PERSIST:
+=============================================================================
+
+1. Check database.php credentials are correct
+   - SSH into Hostinger
+   - Test MySQL connection:
+     mysql -h localhost -u username -p password database_name
+
+2. Verify database.sql was imported
+   - Check in phpMyAdmin
+   - Should have tables: users, stores, purchases, etc.
+
+3. Clear browser data and try fresh login
+   - Storage > Local Storage > Clear All
+   - Then refresh and login again
+
+4. Check file permissions
+   - Files should be readable/executable
+   - Directories should have 755 permissions
+   - config/ should be 700 (no web access)
+
+=============================================================================
+DEPLOYMENT STEPS FOR HOSTINGER:
+=============================================================================
+
+1. Extract downloaded project files
+
+2. Update config/database.php with your MySQL credentials:
+   - $servername = "localhost"
+   - $db_user = "your_hostinger_username"
+   - $db_pass = "your_hostinger_password"
+   - $db_name = "your_database_name"
+
+3. Import database.sql into your MySQL database:
+   - Use phpMyAdmin
+   - Select database > Import > Choose database.sql
+
+4. Upload all files to public_html/ via FTP:
+   - config/ folder
+   - api/ folder
+   - public/ folder
+   - index.php (if needed for routing)
+
+5. Test login at: https://yourdomain.com/public/login.html
+   - Use admin / admin123
+   - Check browser console for [v0] messages
+   - If no errors, you're ready!
+
+=============================================================================

@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stores - Enterprise Management System</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <style>
+      :root {
+        --primary: #1a1a1a;
+        --secondary: #2d2d2d;
+        --tertiary: #3a3a3a;
+        --accent: #0066cc;
+        --accent-dark: #0052a3;
+        --text: #f0f0f0;
+        --text-muted: #999;
+        --border: #444;
+        --success: #28a745;
+        --warning: #ffc107;
+        --danger: #dc3545;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--primary);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+
+      .navbar {
+        background-color: var(--secondary);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+      }
+
+      .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      .navbar-nav .nav-link {
+        color: var(--text);
+        margin: 0 0.5rem;
+        transition: color 0.3s;
+      }
+
+      .navbar-nav .nav-link:hover {
+        color: var(--accent);
+      }
+
+      .navbar-nav .nav-link.active {
+        color: var(--accent);
+        border-bottom: 2px solid var(--accent);
+      }
+
+      .container-fluid {
+        padding: 2rem;
+      }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .btn-primary {
+        background-color: var(--accent);
+        border: none;
+        padding: 0.6rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--accent-dark);
+        transform: translateY(-2px);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .stat-icon {
+        font-size: 2rem;
+        color: var(--accent);
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 102, 204, 0.1);
+        border-radius: 8px;
+      }
+
+      .stat-content h3 {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin: 0;
+        font-weight: 500;
+      }
+
+      .stat-content p {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0.25rem 0 0;
+        color: var(--text);
+      }
+
+      .stores-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .store-card {
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+
+      .store-card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+      }
+
+      .store-card h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .store-card p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin: 0.25rem 0;
+      }
+
+      .store-card-footer {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .store-card-footer span {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .table-container {
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+      }
+
+      .table {
+        margin: 0;
+        color: var(--text);
+      }
+
+      .table thead {
+        background-color: var(--tertiary);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .table thead th {
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 1rem;
+        border: none;
+      }
+
+      .table tbody td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+      }
+
+      .table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .table tbody tr:hover {
+        background-color: var(--tertiary);
+      }
+
+      .badge {
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .badge-success {
+        background-color: rgba(40, 167, 69, 0.2);
+        color: #51cf66;
+      }
+
+      .badge-warning {
+        background-color: rgba(255, 193, 7, 0.2);
+        color: #ffd43b;
+      }
+
+      .badge-danger {
+        background-color: rgba(220, 53, 69, 0.2);
+        color: #ff6b6b;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 2rem;
+        max-width: 500px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .modal-header h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 1.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      .form-control {
+        background-color: var(--tertiary);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        width: 100%;
+        transition: all 0.3s;
+      }
+
+      .form-control:focus {
+        background-color: var(--tertiary);
+        border-color: var(--accent);
+        color: var(--text);
+        box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+      }
+
+      .form-control::placeholder {
+        color: #666;
+      }
+
+      .alert {
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+      }
+
+      .alert-success {
+        background-color: rgba(40, 167, 69, 0.1);
+        border: 1px solid #28a745;
+        color: #51cf66;
+      }
+
+      .alert-danger {
+        background-color: rgba(220, 53, 69, 0.1);
+        border: 1px solid #dc3545;
+        color: #ff6b6b;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container-fluid">
+        <span class="navbar-brand">
+          <i class="bi bi-boxes"></i> Enterprise
+        </span>
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link active" href="/stores-dashboard.html">Stores</a>
+          <a class="nav-link" href="#" onclick="logout()">Logout</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid">
+      <div class="page-header">
+        <h1>Inventory Management</h1>
+        <button class="btn-primary" onclick="openCreateStoreModal()">
+          <i class="bi bi-plus-lg"></i> New Store
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-building"></i></div>
+          <div class="stat-content">
+            <h3>Total Stores</h3>
+            <p id="totalStores">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-box-seam"></i></div>
+          <div class="stat-content">
+            <h3>Total Items</h3>
+            <p id="totalItems">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-exclamation-triangle"></i></div>
+          <div class="stat-content">
+            <h3>Low Stock</h3>
+            <p id="lowStock">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-cash-coin"></i></div>
+          <div class="stat-content">
+            <h3>Total Value</h3>
+            <p id="totalValue">$0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stores -->
+      <h2 style="margin: 2rem 0 1rem; font-weight: 700;">Stores</h2>
+      <div class="stores-grid" id="storesGrid"></div>
+
+      <!-- Inventory Table -->
+      <h2 style="margin: 2rem 0 1rem; font-weight: 700;">All Inventory</h2>
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Name</th>
+              <th>Quantity</th>
+              <th>Reorder Level</th>
+              <th>Status</th>
+              <th>Unit Cost</th>
+              <th>Total Value</th>
+            </tr>
+          </thead>
+          <tbody id="inventoryBody">
+            <tr>
+              <td colspan="7" style="text-align: center; color: #999;">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Create Store Modal -->
+    <div class="modal" id="createStoreModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Create New Store</h2>
+          <button class="modal-close" onclick="closeModal('createStoreModal')">×</button>
+        </div>
+        <form id="createStoreForm">
+          <div id="storeError" class="alert alert-danger" style="display: none;"></div>
+          <div class="form-group">
+            <label class="form-label">Store Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="storeName"
+              placeholder="Main Warehouse"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <input
+              type="text"
+              class="form-control"
+              id="storeLocation"
+              placeholder="Building A, Floor 2"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Capacity (units)</label>
+            <input type="number" class="form-control" id="storeCapacity" placeholder="5000" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" id="storeDescription" placeholder="Optional description"></textarea>
+          </div>
+          <button type="submit" class="btn-primary" style="width: 100%;">Create Store</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const API_URL = "http://localhost:3000"
+      let authToken = localStorage.getItem("authToken")
+
+      // Check authentication
+      if (!authToken) {
+        window.location.href = "/login.html"
+      }
+
+      // Load data on page load
+      document.addEventListener("DOMContentLoaded", () => {
+        loadStores()
+      })
+
+      // Load stores
+      async function loadStores() {
+        try {
+          const response = await fetch(`${API_URL}/api/stores`, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          })
+
+          if (response.status === 401) {
+            window.location.href = "/login.html"
+            return
+          }
+
+          const data = await response.json()
+
+          if (data.success) {
+            renderStores(data.data)
+            loadInventory()
+          }
+        } catch (error) {
+          console.error("[v0] Load stores error:", error)
+        }
+      }
+
+      // Render stores
+      function renderStores(stores) {
+        const grid = document.getElementById("storesGrid")
+        grid.innerHTML = ""
+
+        stores.forEach((store) => {
+          const card = document.createElement("div")
+          card.className = "store-card"
+          card.onclick = () => viewStoreDetails(store.id)
+          card.innerHTML = `
+            <h3>${store.name}</h3>
+            <p><i class="bi bi-geo-alt"></i> ${store.location || "N/A"}</p>
+            <p>Capacity: ${store.capacity_units || 0} units</p>
+            <div class="store-card-footer">
+              <span><i class="bi bi-person"></i> By ${store.first_name} ${store.last_name}</span>
+            </div>
+          `
+          grid.appendChild(card)
+        })
+
+        document.getElementById("totalStores").textContent = stores.length
+      }
+
+      // Load inventory
+      async function loadInventory() {
+        try {
+          const response = await fetch(`${API_URL}/api/stores`, {
+            headers: { Authorization: `Bearer ${authToken}` },
+          })
+
+          const storesData = await response.json()
+
+          if (storesData.success && storesData.data.length > 0) {
+            const storeId = storesData.data[0].id
+            const invResponse = await fetch(`${API_URL}/api/stores/${storeId}/inventory`, {
+              headers: { Authorization: `Bearer ${authToken}` },
+            })
+
+            const invData = await invResponse.json()
+
+            if (invData.success) {
+              renderInventory(invData.data)
+            }
+          }
+        } catch (error) {
+          console.error("[v0] Load inventory error:", error)
+        }
+      }
+
+      // Render inventory
+      function renderInventory(items) {
+        const tbody = document.getElementById("inventoryBody")
+        tbody.innerHTML = ""
+
+        let totalItems = 0
+        let lowStockCount = 0
+        let totalValue = 0
+
+        items.forEach((item) => {
+          const isLowStock = item.quantity <= item.reorder_level
+          const status = isLowStock ? "Low Stock" : "In Stock"
+          const badge = isLowStock ? "badge-danger" : "badge-success"
+          const value = (item.quantity * item.unit_cost).toFixed(2)
+          totalValue += item.quantity * item.unit_cost
+          totalItems++
+          if (isLowStock) lowStockCount++
+
+          const row = `
+            <tr>
+              <td><code>${item.sku}</code></td>
+              <td>${item.name}</td>
+              <td>${item.quantity}</td>
+              <td>${item.reorder_level}</td>
+              <td><span class="badge ${badge}">${status}</span></td>
+              <td>$${item.unit_cost}</td>
+              <td>$${value}</td>
+            </tr>
+          `
+          tbody.innerHTML += row
+        })
+
+        document.getElementById("totalItems").textContent = totalItems
+        document.getElementById("lowStock").textContent = lowStockCount
+        document.getElementById("totalValue").textContent = `$${totalValue.toFixed(2)}`
+      }
+
+      // Modal functions
+      function openCreateStoreModal() {
+        document.getElementById("createStoreModal").classList.add("active")
+      }
+
+      function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove("active")
+      }
+
+      // Create store
+      document.getElementById("createStoreForm").addEventListener("submit", async (e) => {
+        e.preventDefault()
+
+        const name = document.getElementById("storeName").value
+        const location = document.getElementById("storeLocation").value
+        const capacity = document.getElementById("storeCapacity").value
+        const description = document.getElementById("storeDescription").value
+
+        try {
+          const response = await fetch(`${API_URL}/api/stores`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({
+              name,
+              location,
+              capacity_units: capacity,
+              description,
+            }),
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            closeModal("createStoreModal")
+            document.getElementById("createStoreForm").reset()
+            loadStores()
+          } else {
+            document.getElementById("storeError").textContent = data.message
+            document.getElementById("storeError").style.display = "block"
+          }
+        } catch (error) {
+          console.error("[v0] Create store error:", error)
+        }
+      })
+
+      function viewStoreDetails(storeId) {
+        console.log("[v0] View store:", storeId)
+        // Will implement detailed view
+      }
+
+      function logout() {
+        localStorage.removeItem("authToken")
+        localStorage.removeItem("user")
+        window.location.href = "/login.html"
+      }
+    </script>
+  </body>
+</html>
